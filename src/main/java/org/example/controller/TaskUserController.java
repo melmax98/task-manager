@@ -37,7 +37,7 @@ public class TaskUserController {
     @PostMapping(value = "{taskId}/comment", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createComment(@PathVariable Integer taskId, @Valid @RequestBody Comment comment) {
-       taskService.addComment(taskId, comment);
+        taskService.addComment(taskId, comment);
     }
 
     @DeleteMapping(value = "comment/{commentId}")

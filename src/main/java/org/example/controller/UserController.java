@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    UserController (UserService userService) {
+    UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -34,7 +34,8 @@ public class UserController {
     }
 
     @GetMapping
-    public @ResponseBody Iterable<User> getAllUsers() {
+    public @ResponseBody
+    Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
         return userService.findAll();
     }

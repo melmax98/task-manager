@@ -93,4 +93,10 @@ public class TaskService {
     public List<Task> getWithfilter(String unit) {
         return taskRepository.findByUnit(unit);
     }
+
+    public String getTaskDetails(Integer id) {
+        Task task = taskRepository.getOne(id);
+        return "Comments: " + task.getComments() + "\n"
+                + "Attachment filename: " + task.getFilename();
+    }
 }
