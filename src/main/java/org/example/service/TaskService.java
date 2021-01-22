@@ -67,7 +67,7 @@ public class TaskService {
 
     public Task createTask(Integer userId, Task task) {
         User user = userRepository.getOne(userId);
-        task.setCreatedBy(user.getUsername());
+        task.setCreatedBy(user);
         task.setCreateDate(LocalDate.now());
         task.setIsCompleted(false);
         return taskRepository.save(task);
@@ -75,17 +75,22 @@ public class TaskService {
 
     public void addComment(Integer taskId, Comment comment) {
         Task task = taskRepository.getOne(taskId);
-        comment.setUserId(comment.getUserId());
+        comment.setUser(comment.getUser());
         comment.setText(comment.getText());
         task.getComments().add(comment);
         commentRepository.save(comment);
         taskRepository.save(task);
     }
 
-    public void deleteComment(Integer commentId, Task task) {
+    public void deleteComment(Integer commentId) {
         Comment comment = commentRepository.getOne(commentId);
+        Task task = taskRepository.findByComment(commentId);
         task.getComments().remove(comment);
         taskRepository.save(task);
         commentRepository.delete(comment);
+    }
+
+    public List<Task> getWithfilter(String unit) {
+        return taskRepository.findByUnit(unit);
     }
 }

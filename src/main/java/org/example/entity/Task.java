@@ -15,16 +15,15 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-   // @NotNull
     private String description;
 
-   // @NotNull
     private String topic;
 
-   // @NotNull
     private Boolean isCompleted;
 
-    private String createdBy;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User createdBy;
 
     private LocalDate createDate;
 

@@ -17,15 +17,13 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/task")
 public class TaskController {
-    @Autowired
-    TaskRepository taskRepository;
-    @Autowired
-    UserRepository userRepository;
-
     TaskService taskService;
 
     @Autowired
@@ -40,7 +38,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public @ResponseBody Iterable<Task> getAll() {
+    public @ResponseBody List<Task> getAll() {
 //        Task task = new Task();
 //        User user1 = userRepository.findById(1).get();
 //        User user2 = userRepository.findById(2).get();
@@ -56,6 +54,28 @@ public class TaskController {
 //
 //        taskRepository.save(task);
         return taskService.findAll();
+    }
+
+    @GetMapping("/filter/{unit}/{sort}")
+    public @ResponseBody Iterable<Task> getWithFilter(@PathVariable String unit, @PathVariable(required = false) Integer sort) {
+        List<Task> tasks;
+        if ("all".equals(unit)) {
+            tasks = taskService.findAll();
+        }
+        else {
+            tasks = taskService.getWithfilter(unit);
+        }
+        List<Task> result;
+        if (sort == null) {
+            sort = 0;
+        }
+        if (sort == 0) {
+            result = tasks.stream().sorted(Comparator.comparing(Task::getCreateDate)).collect(Collectors.toList());
+        } else {
+            result = tasks.stream().sorted(Comparator.comparing(Task::getCreateDate).reversed()).collect(Collectors.toList());
+        }
+
+        return result;
     }
 
 

@@ -40,9 +40,9 @@ public class TaskUserController {
        taskService.addComment(taskId, comment);
     }
 
-    @DeleteMapping(value = "comment/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "comment/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteComment(@PathVariable Integer commentId, @Valid @RequestBody Task task) {
-        taskService.deleteComment(commentId, task);
+    public void deleteComment(@PathVariable Integer commentId) {
+        taskService.deleteComment(commentId);
     }
 }
