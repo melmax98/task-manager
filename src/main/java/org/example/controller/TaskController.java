@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.dto.TaskDto;
 import org.example.entity.Task;
 import org.example.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,12 @@ public class TaskController {
     String getTaksDetails(@PathVariable Integer id) {
         return taskService.getTaskDetails(id);
     }
+
+    @GetMapping("/all")
+    public @ResponseBody
+    Iterable<TaskDto> getAllTasks() {
+        return taskService.findAllTaskDto();
+    }
+
 
 }

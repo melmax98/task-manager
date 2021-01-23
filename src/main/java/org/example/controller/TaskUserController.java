@@ -1,7 +1,9 @@
 package org.example.controller;
 
+import javafx.scene.media.MediaErrorEvent;
 import org.example.entity.Comment;
 import org.example.entity.Task;
+import org.example.repository.TaskRepository;
 import org.example.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,18 +22,26 @@ public class TaskUserController {
     TaskService taskService;
 
     @Autowired
+    TaskRepository taskRepository;
+
+    @Autowired
     public TaskUserController(TaskService taskService) {
         this.taskService = taskService;
     }
 
-    @PostMapping(value = "/user/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/user/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Task createTask(@PathVariable Integer id, @Valid @RequestBody Task task, @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
+    public Task createTask(
+            @PathVariable Integer id,
+            @Valid Task task,
+            @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
+        //Task task = taskRepository.getOne(2);
+
         if (file != null) {
             taskService.saveFile(task, file);
         }
         return taskService.createTask(id, task);
+      //  return new Task();
     }
 
     @PostMapping(value = "{taskId}/comment", consumes = MediaType.APPLICATION_JSON_VALUE)
