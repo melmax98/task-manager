@@ -30,12 +30,6 @@ public class TaskController {
         taskService.updateTask(id, task);
     }
 
-    @GetMapping
-    public @ResponseBody
-    List<Task> getAll() {
-        return taskService.findAll();
-    }
-
     @GetMapping("/filter/{unit}/{sort}")
     public @ResponseBody
     Iterable<Task> getWithFilter(@PathVariable String unit, @PathVariable(required = false) Integer sort) {
@@ -63,7 +57,7 @@ public class TaskController {
         return taskService.getTaskDetails(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public @ResponseBody
     Iterable<TaskDto> getAllTasks() {
         return taskService.findAllTaskDto();

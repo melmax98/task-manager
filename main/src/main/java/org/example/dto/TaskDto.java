@@ -2,7 +2,6 @@ package org.example.dto;
 
 import lombok.Data;
 import org.example.entity.Comment;
-import org.example.entity.User;
 
 import java.io.File;
 import java.time.LocalDate;

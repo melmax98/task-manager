@@ -54,7 +54,7 @@ public class TaskService {
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
+            file.transferTo(new File(uploadPath + File.separator + resultFilename));
 
             task.setFilename(resultFilename);
         }
@@ -109,18 +109,22 @@ public class TaskService {
     public List<TaskDto> findAllTaskDto() {
         List<Task> tasks = taskRepository.findAll();
         List<TaskDto> tasksDto = new ArrayList<>();
-        for (Task task: tasks) {
+        for (Task task : tasks) {
             List<User> users = task.getUsers();
             List<UserDto> usersDto = new ArrayList<>();
 
             TaskDto taskDto = new TaskDto();
             taskDto.setComments(task.getComments());
             taskDto.setDescription(task.getDescription());
-            taskDto.setFile(new File(uploadPath + "/" + task.getFilename()));
+            taskDto.setFile(new File(uploadPath + File.separator + task.getFilename()));
             taskDto.setId(task.getId());
 
             UserDto temp = new UserDto();
-            temp.setRating(userRatingClient.getUserRating(task.getCreatedBy().getId()));
+            try {
+                temp.setRating(userRatingClient.getUserRating(task.getCreatedBy().getId()));
+            } catch (Exception e) {
+                temp.setRating(2);
+            }
             temp.setUsername(task.getCreatedBy().getUsername());
             temp.setRoles(task.getCreatedBy().getRoles());
             temp.setId(task.getCreatedBy().getId());
@@ -130,12 +134,16 @@ public class TaskService {
             taskDto.setTopic(task.getTopic());
             taskDto.setIsCompleted(task.getIsCompleted());
 
-            for(User user: users) {
+            for (User user : users) {
                 UserDto userDto = new UserDto();
                 userDto.setUsername(user.getUsername());
                 userDto.setRoles(user.getRoles());
                 userDto.setId(user.getId());
-                userDto.setRating(userRatingClient.getUserRating(user.getId()));
+                try {
+                    userDto.setRating(userRatingClient.getUserRating(user.getId()));
+                } catch (Exception e) {
+                    userDto.setRating(2);
+                }
                 usersDto.add(userDto);
             }
             taskDto.setUsers(usersDto);

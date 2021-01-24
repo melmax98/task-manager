@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import javafx.scene.media.MediaErrorEvent;
 import org.example.entity.Comment;
 import org.example.entity.Task;
 import org.example.repository.TaskRepository;
@@ -35,13 +34,11 @@ public class TaskUserController {
             @PathVariable Integer id,
             @Valid Task task,
             @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-        //Task task = taskRepository.getOne(2);
 
         if (file != null) {
             taskService.saveFile(task, file);
         }
         return taskService.createTask(id, task);
-      //  return new Task();
     }
 
     @PostMapping(value = "{taskId}/comment", consumes = MediaType.APPLICATION_JSON_VALUE)
