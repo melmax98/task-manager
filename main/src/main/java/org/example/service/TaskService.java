@@ -17,9 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -134,16 +133,22 @@ public class TaskService {
             taskDto.setTopic(task.getTopic());
             taskDto.setIsCompleted(task.getIsCompleted());
 
+            Set<Integer> usersId = users.stream().map(User::getId).collect(Collectors.toSet());
+            Map<Integer, Integer> userRating = new HashMap<>();
+            try{
+                userRating = userRatingClient.getUsersRating(usersId);
+            } catch (Exception e) {
+                for(User user: users) {
+                    userRating.put(user.getId(), 2);
+                }
+            }
+
             for (User user : users) {
                 UserDto userDto = new UserDto();
                 userDto.setUsername(user.getUsername());
                 userDto.setRoles(user.getRoles());
                 userDto.setId(user.getId());
-                try {
-                    userDto.setRating(userRatingClient.getUserRating(user.getId()));
-                } catch (Exception e) {
-                    userDto.setRating(2);
-                }
+                userDto.setRating(userRating.get(user.getId()));
                 usersDto.add(userDto);
             }
             taskDto.setUsers(usersDto);
