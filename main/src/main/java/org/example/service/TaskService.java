@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
-    private UserRepository userRepository;
-    private CommentRepository commentRepository;
-    private UserRatingClient userRatingClient;
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final UserRatingClient userRatingClient;
 
     @Value("${default_rating}")
-    private Integer DEFAULT_RATING;
+    private Integer defaultRating;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -118,14 +118,16 @@ public class TaskService {
             TaskDto taskDto = new TaskDto();
             taskDto.setComments(task.getComments());
             taskDto.setDescription(task.getDescription());
-            taskDto.setFile(new File(uploadPath + File.separator + task.getFilename()));
+            if (task.getFilename() != null) {
+                taskDto.setFile(new File(uploadPath + File.separator + task.getFilename()));
+            }
             taskDto.setId(task.getId());
 
             UserDto temp = new UserDto();
             try {
                 temp.setRating(userRatingClient.getUserRating(task.getCreatedBy().getId()));
             } catch (Exception e) {
-                temp.setRating(DEFAULT_RATING);
+                temp.setRating(defaultRating);
             }
             temp.setUsername(task.getCreatedBy().getUsername());
             temp.setRoles(task.getCreatedBy().getRoles());
@@ -142,7 +144,7 @@ public class TaskService {
                 userRating = userRatingClient.getUsersRating(usersId);
             } catch (Exception e) {
                 for(User user: users) {
-                    userRating.put(user.getId(), DEFAULT_RATING);
+                    userRating.put(user.getId(), defaultRating);
                 }
             }
 
